@@ -16,8 +16,8 @@ contract TokenCappedCrowdsale is FinalizableCrowdsale {
 
     function TokenCappedCrowdsale() public {
 
-        cap = 300000000 * 1 ether;
-        totalTokens = 750000000 * 1 ether;
+        cap = 300 * 1000 * 1000 * 1 ether;
+        totalTokens = 750 * 1000 * 1000 * 1 ether;
     }
 
     function notExceedingSaleCap(uint256 amount) internal constant returns (bool) {
