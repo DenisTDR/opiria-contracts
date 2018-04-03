@@ -1,0 +1,23 @@
+{
+  "name": "opiria-contracts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "clear": "node clear-migrations.js",
+    "deploy": "truffle deploy",
+    "start": "truffle deploy --reset -f 2",
+    "recompile": "truffle compile --compile-all",
+    "rc": "npm run recompile"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "big-number": "^0.4.0",
+    "crypto-js": "^3.1.9-1"
+  }
+}
