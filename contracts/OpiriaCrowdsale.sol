@@ -143,4 +143,28 @@ contract OpiriaCrowdsale is TimedPresaleCrowdsale, MintedCrowdsale, TokenCappedC
         _deliverTokens(tokensWallet, toMintNow);
     }
 
+    uint8 public reservedTokensClaimStage = 0;
+
+    function claimReservedTokens() public onlyOwner {
+
+        uint256 toMintNow = totalTokens.mul(5).div(100);
+        if (reservedTokensClaimStage == 0) {
+            require(now > closingTime + 6 * 30 days);
+            reservedTokensClaimStage = 1;
+            _deliverTokens(tokensWallet, toMintNow);
+        }
+        else if (reservedTokensClaimStage == 1) {
+            require(now > closingTime + 12 * 30 days);
+            reservedTokensClaimStage = 2;
+            _deliverTokens(tokensWallet, toMintNow);
+        }
+        else if (reservedTokensClaimStage == 2) {
+            require(now > closingTime + 12 * 30 days);
+            reservedTokensClaimStage = 3;
+            _deliverTokens(tokensWallet, toMintNow);
+        }
+        else {
+            revert();
+        }
+    }
 }
