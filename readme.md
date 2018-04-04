@@ -3,6 +3,7 @@
 1 token = $0.1
 
 ---
+#### Sale stages
 * Cap (Private Sale / Pre Sale / TGE)
     * initial cap ``300 000 000`` tokens
     * increasable to ``350 000 000`` tokens (by owner)
@@ -20,16 +21,16 @@
         * Each day the bonus will decrease by ``1%`` till ``0%``. 
         
 
-#
-##### Token transfers lock
+---
+#### Token transfers lock
 * Tokens will be unlocked ``30 days`` after the main sale (TGE)
 
-#
-##### Bonus lock
+---
+#### Bonus lock
 * Bonuses will be unlocked ``30 days`` after unlocking the ``token transfers`` by us
 
-#
-##### Token Distribution
+---
+#### Token Distribution
 * ``60%`` TGE
 * ``13%`` Development fund
 * ``20%`` Company/Team
@@ -40,8 +41,9 @@
 * ``5%`` Advisors
 * ``2%`` Bounty
 
-#
-##### Wallets
+
+---
+#### Wallets
 * There are two wallets involved
     * field ``wallet`` (for the the Eths)
     * field ``tokensWallet`` (for company/team/advisors/bounty Tokens)
