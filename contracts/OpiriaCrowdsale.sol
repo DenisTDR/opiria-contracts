@@ -29,7 +29,7 @@ contract OpiriaCrowdsale is TimedPresaleCrowdsale, MintedCrowdsale, TokenCappedC
 
     //overridden
     function _getTokenAmount(uint256 _weiAmount) internal view returns (uint256) {
-        // 1 ether * etherUsdRate * 10    * (100 * bonusPercent) / 100
+        // 1 ether * etherUsdRate * 10
 
         return _weiAmount.mul(rate).mul(10);
     }
