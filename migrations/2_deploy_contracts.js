@@ -24,7 +24,11 @@ module.exports = function (deployer, environment, accounts) {
 
     const times = generateTimes(now, presaleStartsIn, presaleDuration, timeBetweenSales, saleDuration);
     deployer.deploy(OpiriaToken, {from: caller}).then(() => {
-        const constructorParams = [100, accounts[3], OpiriaToken.address, ...times, initialEtherUsdRate];
+        const tokensWallet = accounts[3];
+        const weiWallet = accounts[3];
+        const constructorParams = [OpiriaToken.address, initialEtherUsdRate,
+            weiWallet, tokensWallet, ...times];
+        console.log("constructorParams=" + constructorParams);
         // console.log("deployed token: " + OpiriaToken.address);
         return deployer.deploy(OpiriaCrowdsale, ...constructorParams, {from: caller}).then(() => {
             // console.log("deployed crowdsale: " + OpiriaCrowdsale.address);

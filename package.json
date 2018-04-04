@@ -11,6 +11,7 @@
     "deploy": "truffle deploy",
     "start": "truffle deploy --reset -f 2",
     "recompile": "truffle compile --compile-all",
+    "restart": "rm -rf build && npm run rc && npm run start",
     "rc": "npm run recompile"
   },
   "keywords": [],

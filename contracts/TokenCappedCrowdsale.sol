@@ -10,6 +10,7 @@ contract TokenCappedCrowdsale is FinalizableCrowdsale {
 
     uint256 public cap;
     uint256 public totalTokens;
+    uint256 public soldTokens;
     bool public capIncreased;
 
     event CapIncreased();
@@ -21,7 +22,7 @@ contract TokenCappedCrowdsale is FinalizableCrowdsale {
     }
 
     function notExceedingSaleCap(uint256 amount) internal constant returns (bool) {
-        return cap >= amount.add(token.totalSupply());
+        return cap >= amount.add(soldTokens);
     }
 
     /**

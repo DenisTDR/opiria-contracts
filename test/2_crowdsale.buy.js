@@ -82,6 +82,8 @@ contract('OpiriaCrowdsale', function (accounts) {
         // await resetTimes(csInstance, owner);
     });
 
+
+    //tokens should be send after last test
     it("should receive tokens after payment", async () => {
         const csInstance = await OpiriaCrowdsale.deployed();
 
@@ -90,37 +92,19 @@ contract('OpiriaCrowdsale', function (accounts) {
 
         const etherUsdRate = await csInstance.etherUsdRate.call();
 
-        let tokenToReceive = new BigNumber(amountToSend).mult(etherUsdRate).mult(10).mult(120).div(100);
-        assert.equal(testerBalance.toString(10), tokenToReceive.toString(10), `doesn't have received tokens`);
+        let tokenToReceive = new BigNumber(amountToSend).mult(etherUsdRate).mult(10);
+        assert.equal(testerBalance.toString(10), tokenToReceive.toString(10), `invalid tokens number`);
 
     });
-    return;
-    it("should not accept payment before presale 123", async () => {
-        let tokenInstance;
-        let csInstance;
 
-
-        // await increaseTime(10 * 60);
-
-        csInstance = await OpiriaCrowdsale.deployed();
-        // console.log("csInstance.address=" + csInstance.address);
-
-        // const initialBalance = await web3.eth.getBalance(tester);
-        // console.log("initialBalance=" + initialBalance);
-        try {
-            let tx = await csInstance.send(web3.toWei(1.5, "ether"), {from: tester});
-            console.log("pe then");
-            // const newBalance = await web3.eth.getBalance(tester);
-        }
-        catch (err) {
-            console.log("pe catch: " + err.message);
-            if (err.message === "VM Exception while processing transaction: revert") {
-                return;
-            }
-            else {
-                assert.equal(err.receipt.status, '0x00', 'status not 0')
-            }
-            // assert.equal(err.message, "VM Exception while processing transaction: revert", "different error");
-        }
+    it("should see bonus locked after payment", async () => {
+        const csInstance = await OpiriaCrowdsale.deployed();
+        const etherUsdRate = await csInstance.etherUsdRate.call();
+        let bonusTokens = new BigNumber(amountToSend).mult(etherUsdRate).mult(10).mult(20).div(100);
+        const actualBonus = await csInstance.bonusOf.call(tester);
+        assert.equal(bonusTokens.toString(10), actualBonus.toString(10), `invalid tokens bonus number`);
     });
+
+
+
 });

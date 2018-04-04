@@ -12,26 +12,32 @@ contract OpiriaCrowdsale is TimedPresaleCrowdsale, MintedCrowdsale, TokenCappedC
     uint256 public presaleBonusPercent;
     uint256 public presaleWeiLimit;
 
-    uint256 public etherUsdRate;
-
+    address public tokensWallet;
 
     uint256 public totalBonus = 0;
-    mapping(address => uint256) bonus;
+    mapping(address => uint256) public bonusOf;
 
     // Crowdsale(uint256 _rate, address _wallet, ERC20 _token)
-    function OpiriaCrowdsale(uint256 _rate, address _wallet, ERC20 _token,
-        uint256 _presaleOpeningTime, uint256 _presaleClosingTime, uint256 _openingTime, uint256 _closingTime,
-        uint16 _initialEtherUsdRate) public
+    function OpiriaCrowdsale(ERC20 _token, uint16 _initialEtherUsdRate, address _wallet, address _tokensWallet,
+        uint256 _presaleOpeningTime, uint256 _presaleClosingTime, uint256 _openingTime, uint256 _closingTime
+    ) public
     TimedPresaleCrowdsale(_presaleOpeningTime, _presaleClosingTime, _openingTime, _closingTime)
-    Crowdsale(_rate, _wallet, _token) {
+    Crowdsale(_initialEtherUsdRate, _wallet, _token) {
         setEtherUsdRate(_initialEtherUsdRate);
+        tokensWallet = _tokensWallet;
     }
 
     //overridden
     function _getTokenAmount(uint256 _weiAmount) internal view returns (uint256) {
         // 1 ether * etherUsdRate * 10    * (100 * bonusPercent) / 100
 
-        return _weiAmount.mul(etherUsdRate * 10).div(100);
+        return _weiAmount.mul(rate).mul(10);
+    }
+
+    function _getBonusAmount(uint256 tokens) internal view returns (uint256) {
+        uint8 bonusPercent = _getBonusPercent();
+        uint256 bonusAmount = tokens.mul(bonusPercent).div(100);
+        return bonusAmount;
     }
 
     function _getBonusPercent() internal view returns (uint8) {
@@ -51,14 +57,16 @@ contract OpiriaCrowdsale is TimedPresaleCrowdsale, MintedCrowdsale, TokenCappedC
     function _processPurchase(address _beneficiary, uint256 _tokenAmount) internal {
         _saveBonus(_beneficiary, _tokenAmount);
         _deliverTokens(_beneficiary, _tokenAmount);
+
+        soldTokens = soldTokens.add(_tokenAmount);
     }
 
     function _saveBonus(address _beneficiary, uint256 tokens) internal {
-        uint8 bonusPercent = _getBonusPercent();
-        if (bonusPercent > 0) {
-            uint256 bonusAmount = tokens.mul(bonusPercent).div(100);
+        uint256 bonusAmount = _getBonusAmount(tokens);
+        if (bonusAmount > 0) {
             totalBonus = totalBonus.add(bonusAmount);
-            bonus[_beneficiary] = bonus[_beneficiary].add(bonusAmount);
+            soldTokens = soldTokens.add(bonusAmount);
+            bonusOf[_beneficiary] = bonusOf[_beneficiary].add(bonusAmount);
         }
     }
 
@@ -76,20 +84,19 @@ contract OpiriaCrowdsale is TimedPresaleCrowdsale, MintedCrowdsale, TokenCappedC
         }
 
         uint256 tokens = _getTokenAmount(_weiAmount);
-        require(notExceedingSaleCap(tokens));
-
+        uint256 bonusTokens = _getBonusAmount(tokens);
+        require(notExceedingSaleCap(tokens.add(bonusTokens)));
     }
 
     function setEtherUsdRate(uint16 _etherUsdRate) public onlyOwner {
-        etherUsdRate = _etherUsdRate;
+        rate = _etherUsdRate;
 
         // the presaleWeiLimit must be 5000 in eth at the defined 'etherUsdRate'
         // presaleWeiLimit = 1 ether / etherUsdRate * 5000
-        presaleWeiLimit = uint256(1 ether).mul(5000).div(etherUsdRate);
+        presaleWeiLimit = uint256(1 ether).mul(5000).div(rate);
     }
 
 
-    ///TODO: handle bonuses separately + check
     /// TODO: team tokens claimance
 
     /**
@@ -111,12 +118,13 @@ contract OpiriaCrowdsale is TimedPresaleCrowdsale, MintedCrowdsale, TokenCappedC
 
 
     function distributeBonus(address[] addresses) onlyOwner {
+        require(now > closingTime + 60 days);
         for (uint i = 0; i < addresses.length; i++) {
-            if (bonus[addresses[i]] > 0) {
-                uint256 bonusAmount = bonus[addresses[i]];
+            if (bonusOf[addresses[i]] > 0) {
+                uint256 bonusAmount = bonusOf[addresses[i]];
                 _deliverTokens(addresses[i], bonusAmount);
                 totalBonus = totalBonus.sub(bonusAmount);
-                bonus[addresses[i]] = 0;
+                bonusOf[addresses[i]] = 0;
             }
         }
     }
