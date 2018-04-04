@@ -28,24 +28,13 @@ module.exports = function (deployer, environment, accounts) {
         const weiWallet = accounts[3];
         const constructorParams = [OpiriaToken.address, initialEtherUsdRate,
             weiWallet, tokensWallet, ...times];
-        console.log("constructorParams=" + constructorParams);
-        // console.log("deployed token: " + OpiriaToken.address);
         return deployer.deploy(OpiriaCrowdsale, ...constructorParams, {from: caller}).then(() => {
-            // console.log("deployed crowdsale: " + OpiriaCrowdsale.address);
             let tokenInstance;
             return OpiriaToken.deployed().then(instance => {
-                // console.log(instance);
                 tokenInstance = instance;
-                return tokenInstance.owner.call();
-            }).then(owner => {
-                // console.log("old token owner: " + owner);
                 return tokenInstance.transferOwnership(OpiriaCrowdsale.address, {from: caller});
-            }).then(_ => {
-                // return tokenInstance.owner.call();
-            }).then(owner => {
-                // console.log("new token owner: " + owner);
-                // console.log("changed token owner");
-                console.log("deployed");
+            }).then(() => {
+                // console.log("deployed");
             });
         });
     });
