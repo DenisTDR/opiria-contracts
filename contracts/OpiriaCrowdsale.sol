@@ -96,9 +96,6 @@ contract OpiriaCrowdsale is TimedPresaleCrowdsale, MintedCrowdsale, TokenCappedC
         presaleWeiLimit = uint256(1 ether).mul(5000).div(rate);
     }
 
-
-    /// TODO: team tokens claimance
-
     /**
     * Send tokens by the owner directly to an address.
     */
