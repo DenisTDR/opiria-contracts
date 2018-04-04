@@ -5,8 +5,8 @@
 ---
 #### Sale stages
 * Cap (Private Sale / Pre Sale / TGE)
-    * initial cap ``300 000 000`` tokens
-    * increasable to ``350 000 000`` tokens (by owner)
+    * initial cap ``400 000 000`` tokens
+    * increasable to ``450 000 000`` tokens (by owner)
     
 * Presale (from ``presaleOpeningTime`` to ``presaleClosingTime``)
     * minimum contribution ``$5000`` 
