@@ -135,7 +135,12 @@ contract OpiriaCrowdsale is TimedPresaleCrowdsale, MintedCrowdsale, TokenCappedC
 
         // mint 25% of total Tokens (13% for development, 5% for company/team, 6% for advisors, 2% bounty) into team wallet
         uint256 toMintNow = totalTokens.mul(25).div(100);
-        token.mint(tokensWallet, toMintNow);
+
+        if (!capIncreased) {
+            // if the cap didn't increase (according to whitepaper) mint the 50MM tokens to the team wallet too
+            toMintNow = toMintNow.add(50 * 1000 * 1000);
+        }
+        _deliverTokens(tokensWallet, toMintNow);
     }
 
 }

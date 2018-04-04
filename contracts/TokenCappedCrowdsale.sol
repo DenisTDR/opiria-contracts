@@ -10,14 +10,14 @@ contract TokenCappedCrowdsale is FinalizableCrowdsale {
 
     uint256 public cap;
     uint256 public totalTokens;
-    uint256 public soldTokens;
-    bool public capIncreased;
+    uint256 public soldTokens = 0;
+    bool public capIncreased = false;
 
     event CapIncreased();
 
     function TokenCappedCrowdsale() public {
 
-        cap = 300 * 1000 * 1000 * 1 ether;
+        cap = 400 * 1000 * 1000 * 1 ether;
         totalTokens = 750 * 1000 * 1000 * 1 ether;
     }
 
