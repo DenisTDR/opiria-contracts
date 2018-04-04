@@ -22,10 +22,6 @@
         
 
 ---
-#### Bonus lock
-* Bonuses will be unlocked ``30 days`` after unlocking the ``token transfers`` by us
-
----
 #### Token Distribution
 * ``60%`` TGE
 * ``13%`` Development fund
