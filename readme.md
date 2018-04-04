@@ -22,10 +22,6 @@
         
 
 ---
-#### Token transfers lock
-* Tokens will be unlocked ``30 days`` after the main sale (TGE)
-
----
 #### Bonus lock
 * Bonuses will be unlocked ``30 days`` after unlocking the ``token transfers`` by us
 
@@ -34,13 +30,21 @@
 * ``60%`` TGE
 * ``13%`` Development fund
 * ``20%`` Company/Team
-    * ``25%`` ~ (``5%`` from total) unlocked ``30 days`` after TGE
-    * ``25%`` ~ (``5%`` from total) unlocked ``6 months`` after TGE
-    * ``25%`` ~ (``5%`` from total) unlocked ``12 months`` after TGE
-    * ``25%`` ~ (``5%`` from total) unlocked ``24 months`` after TGE
 * ``5%`` Advisors
 * ``2%`` Bounty
 
+---
+####Locks
+ * Token transfer
+    * Tokens will be unlocked ``30 days`` after the main sale (TGE)
+ * Bonus
+    * Bonuses will be unlocked ``30 days`` after unlocking the ``token transfers`` by us
+ * Reserved tokens
+    * development fund,``25%`` from team tokens, advisors, bounty unlocked ``30 days`` after TGE
+        * ``13%`` + ``5%`` +  ``5%`` + ``2%`` = ``25%`` from total
+    * ``25%`` from team tokens ( =``5%`` from total) unlocked ``6 months`` after TGE
+    * ``25%`` from team tokens ( =``5%`` from total) unlocked ``12 months`` after TGE
+    * ``25%`` from team tokens ( =``5%`` from total) unlocked ``24 months`` after TGE
 
 ---
 #### Wallets
