@@ -90,7 +90,7 @@ contract('OpiriaCrowdsale', function (accounts) {
         let tokenInstance = await OpiriaToken.deployed();
         let testerBalance = await tokenInstance.balanceOf.call(tester);
 
-        const etherUsdRate = await csInstance.etherUsdRate.call();
+        const etherUsdRate = await csInstance.rate.call();
 
         let tokenToReceive = new BigNumber(amountToSend).mult(etherUsdRate).mult(10);
         assert.equal(testerBalance.toString(10), tokenToReceive.toString(10), `invalid tokens number`);
@@ -99,7 +99,7 @@ contract('OpiriaCrowdsale', function (accounts) {
 
     it("should see bonus locked after payment", async () => {
         const csInstance = await OpiriaCrowdsale.deployed();
-        const etherUsdRate = await csInstance.etherUsdRate.call();
+        const etherUsdRate = await csInstance.rate.call();
         let bonusTokens = new BigNumber(amountToSend).mult(etherUsdRate).mult(10).mult(20).div(100);
         const actualBonus = await csInstance.bonusOf.call(tester);
         assert.equal(bonusTokens.toString(10), actualBonus.toString(10), `invalid tokens bonus number`);

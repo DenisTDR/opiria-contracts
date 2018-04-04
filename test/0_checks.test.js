@@ -27,7 +27,7 @@ contract('OpiriaCrowdsale', function (accounts) {
     });
     it("should have initial etherUsedRate", async () => {
         const csInstance = await OpiriaCrowdsale.deployed();
-        const actualEtherUsdRate = await csInstance.etherUsdRate.call();
+        const actualEtherUsdRate = await csInstance.rate.call();
         const etherUsdRateToTest = require("../scripts/initial-config").initialEtherUsdRate;
         assert.equal(actualEtherUsdRate.toNumber(), etherUsdRateToTest, "inequal etherUsdRate");
 

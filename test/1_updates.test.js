@@ -80,7 +80,7 @@ contract('OpiriaCrowdsale', function (accounts) {
 
         let csInstance = await OpiriaCrowdsale.deployed();
         await csInstance.setEtherUsdRate(etherUsdRateToSet, {from: caller});
-        let etherUsdRate = await csInstance.etherUsdRate.call();
+        let etherUsdRate = await csInstance.rate.call();
         assert.equal(etherUsdRate.toNumber(), etherUsdRateToSet, "etherUsdRate not updated");
         let presaleWeiLimit = await csInstance.presaleWeiLimit.call();
         // console.log("presaleWeiLimit    =" + presaleWeiLimit);
