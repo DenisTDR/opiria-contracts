@@ -1,3 +1,5 @@
+const BigNumber = require('big-number');
+
 const OpiriaCrowdsale = artifacts.require("./OpiriaCrowdsale.sol");
 const OpiriaToken = artifacts.require("./OpiriaToken.sol");
 
@@ -7,21 +9,33 @@ const web3 = OpiriaCrowdsale.web3;
 const advanceToPresale = require("../scripts/timings").advanceToPresale;
 const resetTimes = require("../scripts/timings").resetTimes;
 
-const BigNumber = require('big-number');
+
+const crowdsaleDeploy = require("../scripts/crowdsale-deploy");
 
 
 contract('OpiriaCrowdsale', function (accounts) {
     const owner = accounts[0];
     const tester = accounts[2];
 
+    let csInstance = null;
+    let tokenInstance = null;
+
+    beforeEach(async () => {
+        if(csInstance !== null) {
+            return;
+        }
+
+        csInstance = await crowdsaleDeploy(web3, accounts, artifacts);
+        tokenInstance = await OpiriaToken.at(await csInstance.token.call());
+    });
+
+
     it("should start with 0 tokens", async () => {
-        let tokenInstance = await OpiriaToken.deployed();
         let testerBalance = await tokenInstance.balanceOf.call(tester);
         assert.equal(testerBalance.toNumber(), 0, `doesn't have 0 tokens`);
     });
 
     it("should not accept payment before presale", async () => {
-        const csInstance = await OpiriaCrowdsale.deployed();
 
         try {
             let presaleWeiLimit = await csInstance.presaleWeiLimit.call();
@@ -51,7 +65,6 @@ contract('OpiriaCrowdsale', function (accounts) {
     let amountToSend;
 
     it("should accept payment in presale", async () => {
-        const csInstance = await OpiriaCrowdsale.deployed();
 
         const actualOwner = await csInstance.owner.call();
         assert.equal(actualOwner, owner, "invalid owner");
@@ -85,9 +98,7 @@ contract('OpiriaCrowdsale', function (accounts) {
 
     //tokens should be send after last test
     it("should receive tokens after payment", async () => {
-        const csInstance = await OpiriaCrowdsale.deployed();
 
-        let tokenInstance = await OpiriaToken.deployed();
         let testerBalance = await tokenInstance.balanceOf.call(tester);
 
         const etherUsdRate = await csInstance.rate.call();
@@ -98,7 +109,6 @@ contract('OpiriaCrowdsale', function (accounts) {
     });
 
     it("should see bonus locked after payment", async () => {
-        const csInstance = await OpiriaCrowdsale.deployed();
         const etherUsdRate = await csInstance.rate.call();
         let bonusTokens = new BigNumber(amountToSend).mult(etherUsdRate).mult(10).mult(20).div(100);
         const actualBonus = await csInstance.bonusOf.call(tester);

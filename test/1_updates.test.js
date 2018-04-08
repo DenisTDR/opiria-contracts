@@ -8,13 +8,23 @@ const advanceToPresale = require("../scripts/timings").advanceToPresale;
 const advanceToSale = require("../scripts/timings").advanceToSale;
 const resetTimes = require("../scripts/timings").resetTimes;
 
+const crowdsaleDeploy = require("../scripts/crowdsale-deploy");
 
 contract('OpiriaCrowdsale', function (accounts) {
     const caller = accounts[0];
     // {from: caller}
 
+    let csInstance = null;
+
+    beforeEach(async () => {
+        if(csInstance !== null) {
+            return;
+        }
+
+        csInstance = await crowdsaleDeploy(web3, accounts, artifacts);
+    });
+
     it("should increase time to presale", async () => {
-        const csInstance = await OpiriaCrowdsale.deployed();
         await advanceToPresale(csInstance);
         const isPresale = await csInstance.isPresale.call();
         assert.equal(isPresale, true, "not in presale");
@@ -23,7 +33,6 @@ contract('OpiriaCrowdsale', function (accounts) {
 
 
     it("should increase time to sale", async () => {
-        const csInstance = await OpiriaCrowdsale.deployed();
 
         const isPresale = await csInstance.isPresale.call();
         assert.equal(isPresale, false, "is presale before testing for sale ...");
@@ -54,7 +63,6 @@ contract('OpiriaCrowdsale', function (accounts) {
         let actualClosingTime;
 
         const times = generateTimes(now, presaleStartsIn, presaleDuration, timeBetweenSales, saleDuration);
-        let csInstance = await OpiriaCrowdsale.deployed();
         const tx = await csInstance.changeTimes(...times, {from: caller});
         // console.log("awaiting random ...");
         // await timeout(45 * 1000);
@@ -78,7 +86,6 @@ contract('OpiriaCrowdsale', function (accounts) {
         let etherUsdRateToSet = 1000;
         let presaleWeiLimitCalc = BigNumber(10).pow(18).mult(5000).div(etherUsdRateToSet);
 
-        let csInstance = await OpiriaCrowdsale.deployed();
         await csInstance.setEtherUsdRate(etherUsdRateToSet, {from: caller});
         let etherUsdRate = await csInstance.rate.call();
         assert.equal(etherUsdRate.toNumber(), etherUsdRateToSet, "etherUsdRate not updated");

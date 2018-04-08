@@ -5,12 +5,23 @@ const BigNumber = require('big-number');
 
 const isAddress = require("../scripts/address.checker");
 
-contract('OpiriaCrowdsale', function (accounts) {
-    const caller = accounts[0];
+const crowdsaleDeploy = require("../scripts/crowdsale-deploy");
+
+contract('OpiriaCrowdsale',  (accounts) => {
+
+    let csInstance = null;
+    let tokenInstance = null;
+
+    beforeEach(async () => {
+        if(csInstance !== null) {
+            return;
+        }
+
+        csInstance = await crowdsaleDeploy(web3, accounts, artifacts);
+        tokenInstance = await OpiriaToken.at(await csInstance.token.call());
+    });
 
     it("should have token owned", async () => {
-        const csInstance = await OpiriaCrowdsale.deployed();
-        const tokenInstance = await OpiriaToken.deployed();
 
         const actualTokenAddress = await csInstance.token.call();
         assert.equal(actualTokenAddress, tokenInstance.address, "token invalid");
@@ -20,13 +31,13 @@ contract('OpiriaCrowdsale', function (accounts) {
     });
 
     it("should have wallet", async () => {
-        const csInstance = await OpiriaCrowdsale.deployed();
+
         const wallet = await csInstance.wallet.call();
         assert.equal(isAddress(wallet), true, "wallet not an eth address");
         // console.log("wallet=" + wallet);
     });
     it("should have initial etherUsedRate", async () => {
-        const csInstance = await OpiriaCrowdsale.deployed();
+
         const actualEtherUsdRate = await csInstance.rate.call();
         const etherUsdRateToTest = require("../scripts/initial-config").initialEtherUsdRate;
         assert.equal(actualEtherUsdRate.toNumber(), etherUsdRateToTest, "inequal etherUsdRate");

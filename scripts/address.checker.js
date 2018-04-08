@@ -1,5 +1,4 @@
-var CryptoJS = require('crypto-js');
-var sha3 = require('crypto-js/sha3');
+const sha3 = require('crypto-js/sha3');
 /**
  * Checks if the given string is an address
  *

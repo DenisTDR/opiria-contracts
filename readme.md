@@ -48,3 +48,4 @@
     * field ``wallet`` (for the the Eths)
     * field ``tokensWallet`` (for company/team/advisors/bounty Tokens)
     
+    
