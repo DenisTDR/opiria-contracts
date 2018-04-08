@@ -9,7 +9,6 @@ import '../zeppelin-solidity/contracts/token/ERC20/PausableToken.sol';
 contract OpiriaCrowdsale is TimedPresaleCrowdsale, MintedCrowdsale, TokenCappedCrowdsale {
     using SafeMath for uint256;
 
-    uint256 public presaleBonusPercent;
     uint256 public presaleWeiLimit;
 
     address public tokensWallet;
